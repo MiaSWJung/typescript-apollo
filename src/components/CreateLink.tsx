@@ -2,21 +2,6 @@ import React, {useState} from "react";
 import {useMutation, gql} from "@apollo/client";
 import {useHistory} from "react-router";
 import { LINKS_PER_PAGE } from "../constants";
-import FEED_QUERY from './LinkList'
-
-const CREATE_LINK_MUTATION = gql`
-  mutation PostMutation(
-    $description: String!
-    $url: String!
-  ) {
-    post(description: $description, url: $url){
-      id
-      createdAt
-      url
-      description
-    }
-  }
-`
 
 const CreateLink : React.FC = ()=> {
   const history = useHistory();

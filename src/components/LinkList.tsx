@@ -1,30 +1,8 @@
 import React from "react";
 import Link from './Link';
-import {useQuery, gql} from "@apollo/client";
+import {useQuery} from "@apollo/client";
+import {FEED_QUERY } from '../queries';
 
-export const FEED_QUERY = gql`
-  query {
-    feed {
-      id
-      links {
-        id
-        createdAt
-        description
-        url
-        postedBy {
-          id
-          name
-        }
-        votes {
-          id
-          user{
-            id
-          }
-        }
-      }
-    }
-  }
-`
 
 const LinkList : React.FC = () => {
   const {data} = useQuery(FEED_QUERY);

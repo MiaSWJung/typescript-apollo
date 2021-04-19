@@ -2,64 +2,6 @@ import { useMutation, gql } from "@apollo/client";
 import React from "react";
 import { AUTH_TOKEN, LINKS_PER_PAGE } from '../constants'
 import {timeDifferenceForDate} from '../utils'
-import FEED_QUERY from './LinkList'
-
-interface Author{
-  id : number;
-  name : string;
-}
-
-interface User{
-  id : number;
-}
-
-interface Vote{
-  id : number;
-  user : User;
-}
-
-interface Link{
-  id : number;
-  description : string;
-  url : string;
-  votes : Array<Vote>;
-  createdAt : Date;
-  postedBy : Author;
-}
-
-interface LinkProps{
-  link : Link
-  index : number;
-}
-
-interface FeedLink{
-  id : number
-  votes : Array<Vote>;
-}
-
-interface Feed{
-  links : Array<FeedLink>
-}
-
-const VOTE_MUTATION = gql`
-  mutation VoteMutation($linkId: ID!) {
-    vote(linkId: $linkId) {
-      id
-      link {
-        id
-        votes {
-          id
-          user {
-            id
-          }
-        }
-      }
-      user {
-        id
-      }
-    }
-  }
-`;
 
 const Link : React.FC<LinkProps>  = (props) =>{
   const {link} = props;
