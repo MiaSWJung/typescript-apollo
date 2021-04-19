@@ -2,6 +2,8 @@ import { useMutation, gql } from "@apollo/client";
 import React from "react";
 import { AUTH_TOKEN, LINKS_PER_PAGE } from '../constants'
 import {timeDifferenceForDate} from '../utils'
+import{ LinkProps, FeedLink, Feed} from '../types'
+import {VOTE_MUTATION, FEED_QUERY} from '../queries'
 
 const Link : React.FC<LinkProps>  = (props) =>{
   const {link} = props;
@@ -13,7 +15,7 @@ const Link : React.FC<LinkProps>  = (props) =>{
   const [vote] = useMutation(VOTE_MUTATION, {
     variables: { linkId : link.id},
     update(cache, { data: { vote } }){
-      const { feed } = cache.readQuery({ query : FEED_QUERY })
+      const { feed }: Feed = cache.readQuery<Feed>({ query : FEED_QUERY } )!;
       const updatedLinks = feed.links.map((feedLink : FeedLink)=> {
         if (feedLink.id === link.id){
           return {
@@ -25,7 +27,7 @@ const Link : React.FC<LinkProps>  = (props) =>{
       })
       
       cache.writeQuery({
-        query: FEED_QUERY,
+        query : FEED_QUERY,
         data : {
           feed : {
             links : updatedLinks

@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import {useMutation, gql} from "@apollo/client";
 import {useHistory} from "react-router";
 import { LINKS_PER_PAGE } from "../constants";
+import {CREATE_LINK_MUTATION, FEED_QUERY} from '../queries'
+import {Feed} from '../types'
 
 const CreateLink : React.FC = ()=> {
   const history = useHistory();
@@ -19,14 +21,14 @@ const CreateLink : React.FC = ()=> {
       const take = LINKS_PER_PAGE;
       const skip = 0;
       const orderBy = { createAt : 'desc' }
-      const data = cache.readQuery({
+      const {feed}: Feed = cache.readQuery({
         query: FEED_QUERY,
         variables : { take, skip, orderBy }
-      });
+      })!;
 
       cache.writeQuery({
         query : FEED_QUERY,
-        data : { feed: { links : [post, ...data.feed.links] } },
+        data : { feed: { links : [post, ...feed.links] } },
         variables : { take, skip, orderBy }
       });
     },
