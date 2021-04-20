@@ -62,7 +62,7 @@ export const VOTE_MUTATION = gql`
 export const FEED_QUERY = gql`
   query FeedQuery($take: Int, $skip: Int, $orderBy: LinkOrderByInput) {
     feed(take: $take, skip: $skip, orderBy: $orderBy) {
-      id
+      #      id
       links {
         id
         createdAt

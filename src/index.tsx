@@ -52,8 +52,12 @@ const wsLink = new WebSocketLink({
 
 const link = split(
   ({ query }) => {
-    const { kind, operation }: Definition = getMainDefinition(query);
-    return kind === "OperationDefinition" && operation === "subscription";
+    // const { kind, operation }: Definition = getMainDefinition(query);
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
   },
   wsLink,
   authLink.concat(httpLink)
@@ -62,6 +66,7 @@ const link = split(
 
 const client = new ApolloClient({
   link,
+  // cache: new InMemoryCache(),
   cache: new InMemoryCache({
     typePolicies: {
       Feed: {

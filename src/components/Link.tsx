@@ -1,23 +1,21 @@
 import { useMutation, gql } from "@apollo/client";
 import React from "react";
 import { AUTH_TOKEN, LINKS_PER_PAGE } from "../constants";
-import { timeDifferenceForDate } from "../utils";
+import { getQueryVariables, timeDifferenceForDate } from "../utils";
 import { LinkProps, FeedLink, Feed } from "../types";
 import { VOTE_MUTATION, FEED_QUERY } from "../queries";
 
 const Link: React.FC<LinkProps> = (props) => {
   const { link } = props;
   const authToken = localStorage.getItem(AUTH_TOKEN);
-  const take = LINKS_PER_PAGE;
-  const skip = 0;
-  const orderBy = { createdAt: "desc" };
+  const variables = getQueryVariables();
 
   const [vote] = useMutation(VOTE_MUTATION, {
     variables: { linkId: link.id },
     update(cache, { data: { vote } }) {
-      const { feed }: Feed = cache.readQuery<Feed>({
+      const { feed }: any = cache.readQuery({
         query: FEED_QUERY,
-        variables: { take, skip, orderBy },
+        variables,
       })!;
       const updatedLinks = feed.links.map((feedLink: FeedLink) => {
         if (feedLink.id === link.id) {
@@ -32,7 +30,7 @@ const Link: React.FC<LinkProps> = (props) => {
       cache.writeQuery({
         query: FEED_QUERY,
         data: { feed: { links: updatedLinks } },
-        variables: { take, skip, orderBy },
+        variables,
       });
     },
   });

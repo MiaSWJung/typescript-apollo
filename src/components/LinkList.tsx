@@ -6,13 +6,7 @@ import { FEED_QUERY } from "../queries";
 import { useHistory } from "react-router";
 import { NEW_LINKS_SUBSCRIPTION } from "../queries";
 import { Feed } from "../types";
-
-const getQueryVariables = (isNewPage: boolean, page: number) => {
-  const skip = isNewPage ? (page - 1) * LINKS_PER_PAGE : 0;
-  const take = isNewPage ? LINKS_PER_PAGE : 100;
-  const orderBy = { createdAt: "desc" };
-  return { take, skip, orderBy };
-};
+import { getQueryVariables } from "../utils";
 
 const LinkList: React.FC = () => {
   const history = useHistory();

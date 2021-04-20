@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router";
-import { LINKS_PER_PAGE } from "../constants";
 import { CREATE_LINK_MUTATION, FEED_QUERY } from "../queries";
 import { Feed } from "../types";
+import { getQueryVariables } from "../utils";
 
 const CreateLink: React.FC = () => {
   const history = useHistory();
@@ -12,23 +12,23 @@ const CreateLink: React.FC = () => {
     url: "",
   });
 
+  const variables = getQueryVariables();
+
   const [createLink] = useMutation(CREATE_LINK_MUTATION, {
     variables: {
       description: formState.description,
       url: formState.url,
     },
     update: (cache, { data: { post } }) => {
-      const take = LINKS_PER_PAGE;
-      const skip = 0;
-      const orderBy = { createAt: "desc" };
-      const { feed }: Feed = cache.readQuery({
+      const { feed }: any = cache.readQuery({
         query: FEED_QUERY,
-        variables: { take, skip, orderBy },
+        variables,
       })!;
+      if (!feed) return;
       cache.writeQuery({
         query: FEED_QUERY,
-        data: { feed: { links: [post, ...feed.links] } },
-        variables: { take, skip, orderBy },
+        data: { feed: { links: feed ? [post, ...feed.links] : "" } },
+        variables,
       });
     },
     onCompleted: () => history.push("/new/1"),
